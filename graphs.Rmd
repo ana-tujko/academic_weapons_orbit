@@ -1,0 +1,430 @@
+```{r}
+library(usmap)
+library(ggplot2)
+
+plot_usmap(regions="states")
+
+plot_usmap(fill="grey20", color="white", regions = "counties", include = "CA")
+
+
+# microsoft learn student ambassador 
+```
+```{r}
+countypop
+plot_usmap(
+  color = "white", 
+  regions = "counties", 
+  data = countypop, 
+  values = 'pop_2022'
+  ) +
+    scale_fill_gradient(
+      trans = "log",
+      high = "#007282",
+      low = "white"
+    ) +
+    theme(legend.position = 'top') + 
+    labs(fill = 'Population (2022)') +
+    guides(
+      fill = guide_colorbar(
+        barwidth = unit(10, 'cm')
+      )
+    )
+```
+```{r}
+cal_countypop <- filter(countypop, abbr == "CA")
+
+plot_usmap(
+  color = "white", 
+  regions = "counties", 
+  include = "CA",
+  data = cal_countypop, 
+  values = 'pop_2022'
+)
+```
+
+```{r}
+county_convert <- function(x) {
+  x <- as.numeric(x)
+  if (x == 1) return("Alameda")
+  else if (x == 2) return("Alpine")
+  else if (x == 3) return("Amador")
+  else if (x == 4) return("Butte")
+  else if (x == 5) return("Calaveras")
+  else if (x == 6) return("Colusa")
+  else if (x == 7) return("Contra Costa")
+  else if (x == 8) return("Del Norte")
+  else if (x == 9) return("El Dorado")
+  else if (x == 10) return("Fresno")
+  else if (x == 11) return("Glenn")
+  else if (x == 12) return("Humboldt")
+  else if (x == 13) return("Imperial")
+  else if (x == 14) return("Inyo")
+  else if (x == 15) return("Kern")
+  else if (x == 16) return("Kings")
+  else if (x == 17) return("Lake")
+  else if (x == 18) return("Lassen")
+  else if (x == 19) return("Los Angeles")
+  else if (x == 20) return("Madera")
+  
+  else if (x == 21) return("Marin")
+  else if (x == 22) return("Mariposa")
+  else if (x == 23) return("Mendocino")
+  else if (x == 24) return("Merced")
+  else if (x == 25) return("Modoc")
+  else if (x == 26) return("Mono")
+  else if (x == 27) return("Monterey")
+  else if (x == 28) return("Napa")
+  else if (x == 29) return("Nevada")
+  else if (x == 30) return("Orange")
+  else if (x == 31) return("Placer")
+  else if (x == 32) return("Plumas")
+  else if (x == 33) return("Riverside")
+  else if (x == 34) return("Sacramento")
+  else if (x == 35) return("San Benito")
+  else if (x == 36) return("San Bernardino")
+  else if (x == 37) return("San Diego")
+  else if (x == 38) return("San Francisco")
+  else if (x == 39) return("San Joaquin")
+  else if (x == 40) return("San Luis Obispo")
+  
+  else if (x == 41) return("San Mateo")
+  else if (x == 42) return("Santa Barbara")
+  else if (x == 43) return("Santa Clara")
+  else if (x == 44) return("Santa Cruz")
+  else if (x == 45) return("Shasta")
+  else if (x == 46) return("Sierra")
+  else if (x == 47) return("Siskiyou")
+  else if (x == 48) return("Solano")
+  else if (x == 49) return("Sonoma")
+  else if (x == 50) return("Stanislaus")
+  else if (x == 51) return("Sutter")
+  else if (x == 52) return("Tehama")
+  else if (x == 53) return("Trinity")
+  else if (x == 54) return("Tulare")
+  else if (x == 55) return("Tuolumne")
+  else if (x == 56) return("Ventura")
+  else if (x == 57) return("Yolo")
+  else if (x == 58) return("Yuba")
+  else return("")
+}
+```
+
+```{r}
+cal_counties = c(1:58)
+
+for (i in cal_counties) {
+  cal_counties[i] <- county_convert(i)
+}
+
+cal_counties
+```
+```{r}
+ela_22 <- c(
+    100 - 24.55,#Alameda[1]
+    100 - 46.88,#Alpine[2]
+    100 - 33.64,#Amador[3] 
+    100 - 30.34,#Butte[4]
+    100 - 39.63,#Calaveras[5]
+    100 - 38.71,#Colusa[6]
+    100 - 28.23,#Contra Costa[7]
+    100 - 45.63,#Del Notre County[8]
+    100 - 21.15,#El Dorado[9]
+    100 - 33.8,#Fresno[10]
+    100 - 43.26,#Glenn[11]
+    100 - 34.29,#Humbolt[12]
+    100 - 37.62,#Imperial[13]
+    100 - 35.16,#Inyo[14]
+    100 - 37.55,#Kern[15]
+    100 - 33.05,#Kings[16]
+    100 - 49.01,#Lake[17]
+    100 - 40.86,#Lassen[18]
+    100 - 30.1,#Los Angeles[19]
+    100 - 39.44,#Madera[20]
+    100 - 19.61,#Marin[21]
+    100 - 34.35,#Mariposa[22]
+    100 - 41.69,#Mendocino[23]
+    100 - 38.57,#Merced[24]
+    100 - 38.1,#Modoc[25]
+    100 - 26.53,#Mono[26]
+    100 - 39.1,#Monterey[27]
+    100 - 31.26,#Napa[28]
+    100 - 26.36,#Nevada[29]
+    100 - 19.47,#Orange[30]
+    100 - 17.51,#Placer[31]
+    100 - 27.7,#Plumas[32]
+    100 - 33.42,#Riverside[33]
+    100 - 32.51,#Sacramento[34]
+    100 - 33.55,#San Benito[35]
+    100 - 35.9,#San Bernardino[36]
+    100 - 25.49,#San Diego[37]
+    100 - 26.68,#San Francisco[38]
+    100 - 36.26,#San Joaquin[39]
+    100 - 25.53,#SLO[40]
+    100 - 22.84,#San Mateo[41]
+    100 - 34.84,#Santa Barbara[42]
+    100 - 21.74,#Santa Clara[43]
+    100 - 33.43,#Santa Cruz[44]
+    100 - 28.76,#Shasta[45]
+    100 - 29,#Sierra[46]
+    100 - 36.87,#Siskiyou[47]
+    100 - 35.16,#Solano[48]
+    100 - 29.96,#Sonoma[49]
+    100 - 37.5,#Stanislaus[50]
+    100 - 32.18,#Sutter[51]
+    100 - 40.81,#Tehama[52]
+    100 - 22.4,#Trinity[53]
+    100 - 36.34,#Tulare[54]
+    100 - 31.96,#Tuolumne[55]
+    100 - 31.36,#Ventura[56]
+    100 - 30.23,#Yolo[57]
+    100 - 36.42#Yuba[58]
+)
+math_22 <- c(
+  100 - 33.35,#Alameda[1]
+  100 - 53.13,#Alpine[2]
+  100 - 46.18,#Amador[3]
+  100 - 40.93,#Butte[4]
+  100 - 50.4,#Calaveras[5]
+  100 - 50.61,#Colusa[6]
+  100 - 37.85,#Contra Costa[7]
+  100 - 57.32,#Del notre County[8]
+  100 - 29.63,#El Dorado[9]
+  100 - 45.8,#Fresno[10]
+  100 - 56.25,#Glenn[11]
+  100 - 43.82,#Humbolt[12]
+  100 - 50.99,#Imperial[13]
+  100 - 43.97,#Inyo[14]
+  100 - 53.27,#Kern[15]
+  100 - 46.85,#Kings[16]
+  100 - 62.12,#Lake[17]
+  100 - 46.83,#Lassen[18]
+  100 - 42.54,#Los Angeles[19]
+  100 - 54.57,#Madera[20]
+  100 - 25.98,#Marin[21]
+  100 - 44.32,#Mariposa[22]
+  100 - 53.21,#Mendocino[23]
+  100 - 53.46,#Merced[24]
+  100 - 49.5,#Modoc[25]
+  100 - 35.55,#Mono[26]
+  100 - 53.09,#Monterey[27]
+  100 - 45.6,#Napa[28]
+  100 - 36.98,#Nevada[29]
+  100 - 31.41,#Orange[30]
+  100 - 24.17,#Placer[31]
+  100 - 36.88,#Plumas[32]
+  100 - 47.74,#Riverside[33]
+  100 - 42.83,#Sacramento[34]
+  100 - 46.46,#San Benito[35]
+  100 - 50.38,#San Bernardino[36]
+  100 - 35.89,#San Diego[37]
+  100 - 34.4,#San Francisco[38]
+  100 - 49.16,#San Joaqin[39]
+  100 - 35.03,#SLO[40]
+  100 - 30.15,#San Mateo[41] 
+  100 - 46.31,#Santa Barbara[42]
+  100 - 29.16,#Santa Clara[43]
+  100 - 44.53,#Santa Cruz[44]
+  100 - 36.14,#Shasta[45]
+  100 - 30.35,#Sierra[46]
+  100 - 47.26,#Siskiyou[47]
+  100 - 46.26,#Solano[48]
+  100 - 41.5,#Sonoma[49]
+  100 - 50.93,#Stanislaus[50]
+  100 - 45.24,#Sutter[51]
+  100 - 50.98,#Tehama[52]
+  100 - 29.89,#Trinity[53]
+  100 - 51.3,#Tulare[54]
+  100 - 42.33,#Tuolumne[55]
+  100 - 43.49,#Ventura[56]
+  100 - 40.94,#Yolo[57]
+  100 - 48.91#Yuba[58]
+)
+```
+
+```{r}
+data_2022 <-data.frame(cal_counties, ela_22, math_22)
+
+data_2022
+```
+
+```{r}
+data_2022$fips <- sapply(data_2022$cal_counties, function(x) fips(state = "CA", county = x))
+
+plot_usmap(regions = "counties", include = "CA", data = data_2022, values = "ela_22") +
+  scale_fill_gradient(low = "white", high = "darkgreen", name = "% of Students Passing") +
+  theme(legend.position = "right") +
+  labs(title = "Achievement Level in ELA by County - 2021/22")
+
+plot_usmap(regions = "counties", include = "CA", data = data_2022, values = "math_22") +
+  scale_fill_gradient(low = "white", high = "darkblue", name = "% of Students Passing") +
+  theme(legend.position = "right") +
+  labs(title = "Achievement Level in Mathematics by County - 2021/22")
+```
+
+```{r}
+ela_15 <- c(
+    100 - 27,#Alameda[1]
+    100 - 28,#Alpine[2]
+    100 - 34,#Amador[3] 
+    100 - 32,#Butte[4]
+    100 - 29,#Calaveras[5]
+    100 - 38,#Colusa[6]
+    100 - 26,#Contra Costa[7]
+    100 - 39,#Del Notre County[8]
+    100 - 21.15,#El Dorado[9]
+    100 - 36,#Fresno[10]
+    100 - 43,#Glenn[11]
+    100 - 35,#Humbolt[12]
+    100 - 39,#Imperial[13]
+    100 - 42,#Inyo[14]
+    100 - 40,#Kern[15]
+    100 - 36,#Kings[16]
+    100 - 40,#Lake[17]
+    100 - 37,#Lassen[18]
+    100 - 32,#Los Angeles[19]
+    100 - 42,#Madera[20]
+    100 - 16,#Marin[21]
+    100 - 30,#Mariposa[22]
+    100 - 41,#Mendocino[23]
+    100 - 38.57,#Merced[24]
+    100 - 31,#Modoc[25]
+    100 - 27,#Mono[26]
+    100 - 40,#Monterey[27]
+    100 - 30,#Napa[28]
+    100 - 26,#Nevada[29]
+    100 - 24,#Orange[30]
+    100 - 16,#Placer[31]
+    100 - 27,#Plumas[32]
+    100 - 32,#Riverside[33]
+    100 - 33,#Sacramento[34]
+    100 - 33,#San Benito[35]
+    100 - 35,#San Bernardino[36]
+    100 - 25,#San Diego[37]
+    100 - 26,#San Francisco[38]
+    100 - 37,#San Joaquin[39]
+    100 - 24,#SLO[40]
+    100 - 22,#San Mateo[41]
+    100 - 33,#Santa Barbara[42]
+    100 - 21,#Santa Clara[43]
+    100 - 31,#Santa Cruz[44]
+    100 - 28,#Shasta[45]
+    100 - 24,#Sierra[46]
+    100 - 30,#Siskiyou[47]
+    100 - 32,#Solano[48]
+    100 - 27,#Sonoma[49]
+    100 - 35,#Stanislaus[50]
+    100 - 33,#Sutter[51]
+    100 - 34,#Tehama[52]
+    100 - 29,#Trinity[53]
+    100 - 40,#Tulare[54]
+    100 - 30,#Tuolumne[55]
+    100 - 31,#Ventura[56]
+    100 - 30,#Yolo[57]
+    100 - 37#Yuba[58]
+)
+math_15 <- c(
+  100 - 27,#Alameda[1]
+  100 - 23,#Alpine[2]
+  100 - 41,#Amador[3]
+  100 - 40.93,#Butte[4]
+  100 - 37,#Calaveras[5]
+  100 - 42,#Colusa[6]
+  100 - 31,#Contra Costa[7]
+  100 - 39,#Del notre County[8]
+  100 - 23,#El Dorado[9]
+  100 - 44,#Fresno[10]
+  100 - 50,#Glenn[11]
+  100 - 40,#Humbolt[12]
+  100 - 46,#Imperial[13]
+  100 - 47,#Inyo[14]
+  100 - 48,#Kern[15]
+  100 - 45,#Kings[16]
+  100 - 49,#Lake[17]
+  100 - 43,#Lassen[18]
+  100 - 40,#Los Angeles[19]
+  100 - 51,#Madera[20]
+  100 - 20,#Marin[21]
+  100 - 34,#Mariposa[22]
+  100 - 47,#Mendocino[23]
+  100 - 50,#Merced[24]
+  100 - 43,#Modoc[25]
+  100 - 36,#Mono[26]
+  100 - 49,#Monterey[27]
+  100 - 38,#Napa[28]
+  100 - 36.98,#Nevada[29]
+  100 - 29,#Orange[30]
+  100 - 22,#Placer[31]
+  100 - 31,#Plumas[32]
+  100 - 47.74,#Riverside[33]
+  100 - 37,#Sacramento[34]
+  100 - 43,#San Benito[35]
+  100 - 45,#San Bernardino[36]
+  100 - 31,#San Diego[37]
+  100 - 29,#San Francisco[38]
+  100 - 43,#San Joaqin[39]
+  100 - 31,#SLO[40]
+  100 - 26,#San Mateo[41] 
+  100 - 41,#Santa Barbara[42]
+  100 - 25,#Santa Clara[43]
+  100 - 39,#Santa Cruz[44]
+  100 - 34,#Shasta[45]
+  100 - 26,#Sierra[46]
+  100 - 35,#Siskiyou[47]
+  100 - 39,#Solano[48]
+  100 - 35,#Sonoma[49]
+  100 - 45,#Stanislaus[50]
+  100 - 40,#Sutter[51]
+  100 - 39,#Tehama[52]
+  100 - 28,#Trinity[53]
+  100 - 48,#Tulare[54]
+  100 - 37,#Tuolumne[55]
+  100 - 37,#Ventura[56]
+  100 - 36,#Yolo[57]
+  100 - 42#Yuba[58]
+)
+```
+
+```{r}
+data_2015 <-data.frame(cal_counties, ela_15, math_15)
+
+data_2015
+```
+
+```{r}
+data_2015$fips <- sapply(data_2015$cal_counties, function(x) fips(state = "CA", county = x))
+
+plot_usmap(regions = "counties", include = "CA", data = data_2015, values = "ela_15") +
+  scale_fill_gradient(low = "white", high = "maroon", name = "% of Students Passing") +
+  theme(legend.position = "right") +
+  labs(title = "Achievement Level in ELA by County - 2014/15")
+
+plot_usmap(regions = "counties", include = "CA", data = data_2015, values = "math_15") +
+  scale_fill_gradient(low = "white", high = "skyblue3", name = "% of Students Passing") +
+  theme(legend.position = "right") +
+  labs(title = "Achievement Level in Mathematics by County - 2014/15")
+```
+
+```{r}
+data_2015 <-data.frame(cal_counties, ela_15, math_15)
+
+data_2015
+```
+
+```{r}
+delta_data <-data.frame(cal_counties, ela_22-ela_15, math_22-math_15)
+delta_data
+```
+```{r}
+delta_data$fips <- sapply(delta_data$cal_counties, function(x) fips(state = "CA", county = x))
+
+plot_usmap(regions = "counties", include = "CA", data = delta_data, values = "ela_22...ela_15") +
+  scale_fill_gradient(low = "white", high = "turquoise4", name = "% Change") +
+  theme(legend.position = "right") +
+  labs(title = "Percent Change Achievement Level in ELA by County")
+
+plot_usmap(regions = "counties", include = "CA", data = delta_data, values = "math_22...math_15") +
+  scale_fill_gradient(low = "white", high = "mediumpurple2", name = "% Change") +
+  theme(legend.position = "right") +
+  labs(title = "Percent Change Achievement Level in Mathematics by County")
+```
+
