@@ -1,0 +1,106 @@
+---
+title: "datathon_edu"
+output: html_document
+---
+
+```{r}
+getwd()
+setwd("/Users/grace/Datathon2025")
+data <- read.csv("edu2014.csv")
+colnames(data) <- c("CountyCode", "DistrictCode", "SchoolCode", "Filler", "TestYear", "SubgroupID", "TestType", "TotalCAASPEnrollment", "TotTestedAtEntityLevel", "TotTestedAtSubgroupLevel", "Grade", "TestID", "CAASPPReportedEnrollment", "StudentsTested", "MeanScaleScore", "PercentageStandardExceeded", "PercentageStandardMet", "PercentageStandardMetAndAbove",	"PercentageStandardNearlyMet",	"PercentageStandardNotMet",	"StudentswithScores",	"A1PercentageAboveStandard",	"A1PercentageAtOrNearStandard",	"A1PercentageBelowStandard",	"A2PercentageAboveStandard",	"A2PercentageAtorNearStandard",	"A2PercentageBelowStandard",	"A3PercentageAboveStandard",	"A3PercentageAtOrNearStandard",	"A3PercentageBelowStandard",	"A4PercentageAboveStandard",	"A4PercentageAtOrNearStandard",	"A4PercentageBelowStandard")
+
+```
+```{r}
+#changing data to numbers!
+data$PercentageStandardMet <- as.numeric(data$PercentageStandardMet)/100
+data$PercentageStandardMetAndAbove <- as.numeric(data$PercentageStandardMetAndAbove)/100
+data$PercentageStandardNearlyMet <- as.numeric(data$PercentageStandardNearlyMet)/100
+data$PercentageStandardNotMet <- as.numeric(data$PercentageStandardNotMet)/100
+data$PercentageStandardExceeded <- as.numeric(data$PercentageStandardExceeded)/100
+data$StudentsTested <- as.numeric(data$StudentsTested)
+
+#multiply number of students with percentage for each standard
+students_exceeded <- (data$PercentageStandardExceeded * data$StudentsTested)
+students_met <- (data$PercentageStandardMet * data$StudentsTested)
+students_met_above <- (data$PercentageStandardMetAndAbove * data$StudentsTested)
+students_nearly_met <- (data$PercentageStandardNearlyMet * data$StudentsTested)
+students_notmet <- (data$PercentageStandardNotMet * data$StudentsTested)
+
+#total number of students for each standard
+(total_students_exceeded <- sum(students_exceeded, na.rm = TRUE))
+(total_students_met_above <- sum(students_met_above, na.rm = TRUE))
+(total_students_met <- sum(students_met, na.rm = TRUE))
+(total_students_nearly_met <- sum(students_nearly_met, na.rm = TRUE))
+(total_students_notmet <- sum(students_notmet, na.rm = TRUE))
+
+data_matrix <- matrix(c(total_students_exceeded, total_students_met_above, total_students_met, 
+                       total_students_nearly_met, 
+                        total_students_notmet), 
+                      ncol = 5, 
+                      byrow = TRUE)
+
+colnames(data_matrix) <- c("Exceeded", "Met and Above", "Met", "Nearly Met", "Not Met")
+
+
+barplot(data_matrix, beside = TRUE, col = c("green", "blue", "purple", "orange", "yellow"), main = "Total of Students in Each Standard's Results 2014")
+```
+
+
+
+
+
+```{r}
+data$MeanScaleScore <- as.numeric(data$MeanScaleScore)
+
+mean(data$MeanScaleScore, na.rm = TRUE)
+
+```
+
+
+
+```{r}
+getwd()
+setwd("/Users/grace/Datathon2025")
+data_now <- read.csv("edu2022.csv")
+colnames(data_now) <- c("CountyCode", "DistrictCode", "SchoolCode", "Filler", "TestYear", "StudentGroupID", "TestType", "TotalTestedAtReportingLevel", "TotTestedwithScores", "Grade", "TestID", "StudentsEnrolled", "StudentsTested", "MeanScaleScore", "PercentageStandardExceeded", "PercentageStandardMet", "PercentageStandardMetAndAbove",	"PercentageStandardNearlyMet",	"PercentageStandardNotMet",	"StudentswithScores",	"A1PercentageAboveStandard",	"A1PercentageAtOrNearStandard",	"A1PercentageBelowStandard",	"A2PercentageAboveStandard",	"A2PercentageAtorNearStandard",	"A2PercentageBelowStandard",	"A3PercentageAboveStandard",	"A3PercentageAtOrNearStandard",	"A3PercentageBelowStandard",	"A4PercentageAboveStandard",	"A4PercentageAtOrNearStandard",	"A4PercentageBelowStandard")
+```
+
+```{r}
+data_now$PercentageStandardMet <- as.numeric(data_now$PercentageStandardMet)/100
+data_now$PercentageStandardMetAndAbove <- as.numeric(data_now$PercentageStandardMetAndAbove)/100
+data_now$PercentageStandardNearlyMet <- as.numeric(data_now$PercentageStandardNearlyMet)/100
+data_now$PercentageStandardNotMet <- as.numeric(data_now$PercentageStandardNotMet)/100
+data_now$PercentageStandardExceeded <- as.numeric(data_now$PercentageStandardExceeded)/100
+data_now$StudentswithScores <- as.numeric(data_now$StudentswithScores)
+
+#multiply number of students with percentage for each standard
+students_exceeded_now <- (data_now$PercentageStandardExceeded * data_now$StudentswithScores)
+students_met_now <- (data_now$PercentageStandardMet * data_now$StudentswithScores)
+students_met_above_now <- (data_now$PercentageStandardMetAndAbove * data_now$StudentswithScores)
+students_nearly_met_now <- (data_now$PercentageStandardNearlyMet * data_now$StudentswithScores)
+students_notmet_now <- (data_now$PercentageStandardNotMet * data_now$StudentswithScores)
+
+#total number of students for each standard
+(total_students_exceeded_now <- sum(students_exceeded_now, na.rm = TRUE))
+(total_students_met_above_now <- sum(students_met_above_now, na.rm = TRUE))
+(total_students_met_now <- sum(students_met_now, na.rm = TRUE))
+(total_students_nearly_met_now <- sum(students_nearly_met_now, na.rm = TRUE))
+(total_students_notmet_now <- sum(students_notmet_now, na.rm = TRUE))
+
+data_matrix_now <- matrix(c(total_students_exceeded_now, total_students_met_above_now, total_students_met_now, 
+                       total_students_nearly_met_now, 
+                        total_students_notmet_now), 
+                      ncol = 5, 
+                      byrow = TRUE)
+
+colnames(data_matrix_now) <- c("Exceeded", "Met and Above", "Met", "Nearly Met", "Not Met")
+
+
+barplot(data_matrix_now, beside = TRUE, col = c("green", "blue", "purple", "orange", "yellow"), main = "Total of Students in Each Standard's Results 2022")
+```
+```{r}
+data_now$MeanScaleScore <- as.numeric(data_now$MeanScaleScore)
+
+mean(data_now$MeanScaleScore, na.rm = TRUE)
+```
+
